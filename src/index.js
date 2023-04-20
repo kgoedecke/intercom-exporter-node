@@ -92,7 +92,7 @@ const main = async () => {
   let currentData = firstData;
   while (currentPage < totalPages) {
     const nextPageUrl = getNextPageUrl(currentData);
-    const { data: nextData } = await getNextPages(nextPageUrl);
+    const { data: nextData, page: nextPage } = await getNextPages(nextPageUrl);
     const conversationDetails = await Promise.all(
       nextData.conversations.map((conversation) =>
         getConversationDetails(conversation.id)
@@ -100,7 +100,7 @@ const main = async () => {
     );
 
     /*
-     * Only display customer iniated conversations
+     * Only display customer initiated conversations
      */
     const customerConversations = conversationDetails.filter(
       (conversationDetail) =>
@@ -136,8 +136,8 @@ const main = async () => {
     );
     await Promise.all(saveAll);
 
-    currentPage = firstPage;
-    currentData = firstData;
+    currentPage = nextPage;
+    currentData = nextData;
   }
 };
 
